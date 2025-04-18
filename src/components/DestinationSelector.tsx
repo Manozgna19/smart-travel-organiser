@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { popularDestinations, getAllStates, getDestinationsByState } from '@/utils/destinations';
 import DestinationCard from '@/components/DestinationCard';
@@ -18,6 +17,7 @@ interface DestinationSelectorProps {
   budget?: number;
   days?: number;
   persons?: number;
+  startingLocation?: string;
 }
 
 const DestinationSelector: React.FC<DestinationSelectorProps> = ({ 
@@ -25,7 +25,8 @@ const DestinationSelector: React.FC<DestinationSelectorProps> = ({
   onChange,
   budget = 50000,
   days = 5,
-  persons = 2
+  persons = 2,
+  startingLocation = ""
 }) => {
   const [activeTab, setActiveTab] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -54,9 +55,10 @@ const DestinationSelector: React.FC<DestinationSelectorProps> = ({
     }
     
     // Generate recommended combinations when budget or other params change
-    const bestCombo = getBestDestinationCombination(budget, days, persons, maxDestinations);
+    // Pass starting location to consider when generating recommendations
+    const bestCombo = getBestDestinationCombination(budget, days, persons, maxDestinations, startingLocation);
     setRecommendedCombinations(bestCombo);
-  }, [budget, days, persons]);
+  }, [budget, days, persons, startingLocation]);
 
   const handleDestinationToggle = (destinationId: string, isChecked: boolean) => {
     if (isChecked) {

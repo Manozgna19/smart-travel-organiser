@@ -21,6 +21,7 @@ export interface Destination {
   type: DestinationType;
   costFactor: number; // Relative cost (1 = average, <1 = cheaper, >1 = more expensive)
   popularity: number; // 1-10 scale
+  famousPlaces?: string[]; // Added famous places property
 }
 
 export type DestinationType = 'beach' | 'mountain' | 'city' | 'wildlife' | 'historical' | 'spiritual';

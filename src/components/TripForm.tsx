@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { TripParams } from '@/types/trip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -58,6 +57,7 @@ const TripForm: React.FC<TripFormProps> = ({ onSubmit }) => {
                 budget={formData.budget}
                 days={formData.days}
                 persons={formData.persons}
+                startingLocation={formData.startingLocation}
                 errors={errors}
                 onDestinationsChange={handleDestinationsChange}
                 onPreviousStep={goToPreviousStep}

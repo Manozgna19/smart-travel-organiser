@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -10,6 +9,7 @@ interface TripFormDestinationsProps {
   budget: number;
   days: number;
   persons: number;
+  startingLocation: string;
   errors: Partial<Record<keyof TripParams, string>>;
   onDestinationsChange: (destinations: string[]) => void;
   onPreviousStep: () => void;
@@ -20,6 +20,7 @@ const TripFormDestinations: React.FC<TripFormDestinationsProps> = ({
   budget,
   days,
   persons,
+  startingLocation,
   errors,
   onDestinationsChange,
   onPreviousStep
@@ -34,6 +35,7 @@ const TripFormDestinations: React.FC<TripFormDestinationsProps> = ({
           budget={budget}
           days={days}
           persons={persons}
+          startingLocation={startingLocation}
         />
         {errors.destinationPreferences && (
           <p className="text-red-500 text-sm">{errors.destinationPreferences}</p>

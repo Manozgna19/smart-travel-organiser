@@ -1,4 +1,3 @@
-
 import { TripParams, BudgetBreakdown, Destination } from "../types/trip";
 import { popularDestinations, getBudgetFriendlyDestinations } from "./destinations";
 
@@ -116,7 +115,8 @@ export const getBestDestinationCombination = (
   budget: number,
   days: number,
   persons: number,
-  maxDestinations: number = 2
+  maxDestinations: number = 2,
+  startingLocation: string = ""
 ): string[] => {
   const dailyBudget = budget / (days * persons);
   
@@ -137,16 +137,27 @@ export const getBestDestinationCombination = (
     actualMaxDestinations = Math.min(actualMaxDestinations + 1, 3);
   }
   
-  // Filter to affordable destinations
+  // Find the starting location destination ID (if it exists in our destinations)
+  const startingLocationDestination = popularDestinations.find(
+    dest => dest.name.toLowerCase() === startingLocation.toLowerCase()
+  );
+  
+  // Filter to affordable destinations and exclude the starting location
   const affordableDestinations = popularDestinations.filter(dest => {
     const affordability = getDestinationAffordability(dest, dailyBudget);
-    return affordability !== 'luxury';
+    const isNotStartingLocation = !startingLocationDestination || 
+                                 dest.id !== startingLocationDestination.id;
+    return affordability !== 'luxury' && isNotStartingLocation;
   });
   
-  // If no affordable destinations, return the cheapest one
+  // If no affordable destinations, return the cheapest one that's not the starting location
   if (affordableDestinations.length === 0) {
-    const cheapestDest = popularDestinations.sort((a, b) => a.costFactor - b.costFactor)[0];
-    return [cheapestDest.id];
+    const cheapestDests = popularDestinations.sort((a, b) => a.costFactor - b.costFactor);
+    // Filter out starting location
+    const eligibleDests = cheapestDests.filter(dest => 
+      !startingLocationDestination || dest.id !== startingLocationDestination.id
+    );
+    return eligibleDests.length > 0 ? [eligibleDests[0].id] : [];
   }
   
   // If only one affordable destination, return it
@@ -158,18 +169,21 @@ export const getBestDestinationCombination = (
   // Lower budget favors cheaper destinations, higher budget favors more popular destinations
   const isBudgetOriented = budget < 30000; // Threshold to determine if we focus on budget
   
-  // Sort criteria changes based on budget orientation
+  // Add randomization factor to provide variety in recommendations
+  const randomFactor = Math.random() * 0.3; // Random factor of up to 30%
+  
+  // Sort criteria changes based on budget orientation with randomization
   const sortedDestinations = [...affordableDestinations].sort((a, b) => {
     if (isBudgetOriented) {
-      // Budget oriented: prioritize cost factor first, then popularity
+      // Budget oriented: prioritize cost factor first, then popularity with randomization
       return a.costFactor === b.costFactor 
-        ? b.popularity - a.popularity // If same cost, higher popularity wins
+        ? (b.popularity * (1 + randomFactor)) - a.popularity // If same cost, higher popularity wins
         : a.costFactor - b.costFactor; // Lower cost wins
     } else {
-      // Experience oriented: prioritize popularity first, then cost factor
+      // Experience oriented: prioritize popularity first, then cost factor with randomization
       return a.popularity === b.popularity
         ? a.costFactor - b.costFactor // If same popularity, lower cost wins
-        : b.popularity - a.popularity; // Higher popularity wins
+        : (b.popularity * (1 + randomFactor)) - (a.popularity * (1 - randomFactor)); // Higher popularity wins
     }
   });
   
@@ -201,3 +215,4 @@ export const getBestDestinationCombination = (
   
   return selectedDestinations.map(dest => dest.id);
 };
+

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { TripDay, Destination } from '@/types/trip';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +9,8 @@ import {
   Utensils, 
   MapPin, 
   CheckCircle2,
-  Bus
+  Bus,
+  Landmark
 } from 'lucide-react';
 
 interface TripItineraryProps {
@@ -63,8 +63,17 @@ const TripItinerary: React.FC<TripItineraryProps> = ({ itinerary }) => {
                 <div className="mt-3 space-y-3">
                   <div>
                     <h4 className="text-sm font-medium flex items-center mb-1">
-                      <CheckCircle2 className="h-4 w-4 mr-1 text-india-green" />
-                      {isTransitDay ? "Travel Plan" : "Activities"}
+                      {isTransitDay ? (
+                        <>
+                          <Bus className="h-4 w-4 mr-1 text-india-green" />
+                          Travel Plan
+                        </>
+                      ) : (
+                        <>
+                          <Landmark className="h-4 w-4 mr-1 text-india-green" />
+                          Attractions & Activities
+                        </>
+                      )}
                     </h4>
                     <ul className="pl-6 list-disc space-y-1">
                       {day.activities.map((activity, index) => (
@@ -103,3 +112,4 @@ const TripItinerary: React.FC<TripItineraryProps> = ({ itinerary }) => {
 };
 
 export default TripItinerary;
+

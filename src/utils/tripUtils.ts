@@ -1,4 +1,3 @@
-
 import { TripParams, BudgetBreakdown, TripPlan, TripDay, BudgetRecommendation } from "../types/trip";
 import { addDays } from "date-fns";
 import { popularDestinations, getDestinationById } from "./destinations";
@@ -37,7 +36,13 @@ export const generateTripPlan = (params: TripParams): TripPlan => {
   
   const selectedDestinations = params.destinationPreferences.length > 0 
     ? params.destinationPreferences 
-    : getBestDestinationCombination(params.budget, params.days, params.persons, maxDestinations);
+    : getBestDestinationCombination(
+        params.budget, 
+        params.days, 
+        params.persons, 
+        maxDestinations,
+        params.startingLocation // Pass starting location to consider when generating recommendations
+      );
   
   // Calculate destination cost factor
   const destinationCostFactor = calculateDestinationCostFactor(selectedDestinations);
