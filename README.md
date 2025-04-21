@@ -5,7 +5,7 @@ A travel planning platform that integrates AI-powered recommendations, real-time
 # 🚀UI Preview
 
 
-![Project Banner](../smart-travel-organiser/image.png) <!-- Add your banner image -->
+![Project Banner](./image.png) <!-- Add your banner image -->
 
 
 ## Key Features
